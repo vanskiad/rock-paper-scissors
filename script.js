@@ -68,3 +68,5 @@ function playGame (){
     else
         console.log ("Computer wins!");
 }
+
+playGame ()
