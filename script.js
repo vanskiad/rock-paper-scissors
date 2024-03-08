@@ -17,41 +17,45 @@ function playRound(playerSelection, computerSelection) {
     playerSelection= playerSelection.toLowerCase();
     if (playerSelection=="rock") {
         if (computerSelection==="Rock")
-            return "This is a tie";
+            return "This round is a tie.";
         else if (computerSelection==="Paper")
-            return "You lose! Paper beats Rock";
+            return "You lose this round! Paper beats Rock";
         else if (computerSelection==="Scissors") 
-            return "You win! Rock beats Scissors";
+            return "You win this round! Rock beats Scissors";
 
     }
     else if (playerSelection=="paper") {
         if (computerSelection==="Rock")
-            return "You win! Paper beats Rock";
+            return "You win this round! Paper beats Rock";
         else if (computerSelection==="Paper")
-            return "This is a tie";
+            return "This round is a tie.";
         else if (computerSelection==="Scissors") 
-            return "You lose! Scissors beats Paper";
+            return "You lose this round! Scissors beats Paper";
 
     }
 
     else if (playerSelection=="scissors") {
         if (computerSelection==="Rock") 
-            return "You lose! Rock beats Scissors";
+            return "You lose this round! Rock beats Scissors";
         else if (computerSelection==="Paper")
-            return "You win! Scissors beats Paper";
+            return "You win this round! Scissors beats Paper";
         else if (computerSelection==="Scissors") 
-            return "This is a tie.";
+            return "This round is a tie.";
 
     }
 }
 
-function playGame (){
-    const numberOfRounds = 5;
-    let computerScore=0;
-    let playerScore=0;
-    for (let i=1; i<=numberOfRounds; i++) {
-        playerSelection = prompt ("This is round "+ i + ". What is your choice? Rock, Paper or Scissors?");
-        computerSelection = getComputerChoice ();
+
+let computerScore=0;
+let playerScore=0;
+let scoreDivText=document.querySelector('#score').textContent;
+
+function playGame (buttonId){
+    let playerSelection = buttonId;
+    let computerSelection=getComputerChoice();
+    
+    let score=document.querySelector("#score");
+        
         let outcome= playRound(playerSelection, computerSelection);
         if (outcome.includes("lose")){
             computerScore++;
@@ -60,13 +64,44 @@ function playGame (){
             playerScore++;
         }
 
-        console.log (outcome);
-        console.log ("The score is: Computer:"+computerScore+" Player:"+playerScore);
+        score.innerHTML += "<p>"+outcome+"</p>";
+        score.innerHTML += "<p>The score is: Computer:"+computerScore+" Player:"+playerScore+"</p>";
+    
+    if (playerScore>computerScore && playerScore===5)
+        score.innerHTML +="<p>Player wins! This is the end of the game!</p>";
+    else if (playerScore<computerScore && computerScore===5)
+        score.innerHTML += "<p>Computer wins! This is the end of the game!</p>";
+    
+
+    if (playerScore===5 || computerScore===5){
+
+        document.querySelector('#rock').disabled = true;
+        document.querySelector('#paper').disabled = true;
+        document.querySelector('#scissors').disabled = true;
+        let resetButton=document.createElement('button')
+        resetButton.textContent="Reset"
+        score.appendChild(resetButton);
+        resetButton.addEventListener('click', resetGame);
+
     }
-    if (playerScore>computerScore)
-        console.log ("Player wins!");
-    else
-        console.log ("Computer wins!");
 }
 
-playGame ();
+function resetGame(){
+    computerScore=0;
+    playerScore=0;
+    score.textContent=scoreDivText;
+    document.querySelector('#rock').disabled = false;
+    document.querySelector('#paper').disabled = false;
+    document.querySelector('#scissors').disabled = false;
+
+}
+
+document.querySelector('#rock').addEventListener('click', function (){
+    playGame("rock");
+});
+document.querySelector('#paper').addEventListener('click', function (){
+    playGame("paper");
+});
+document.querySelector('#scissors').addEventListener('click', function (){
+    playGame("scissors");
+});
